@@ -1,0 +1,105 @@
+extends KinematicBody2D
+
+onready var Player = get_parent().get_node("Player2/Player")
+'''defining var and const'''
+var UP = Vector2(0, -1)
+var motion = Vector2()
+var score = 0
+var health = 4
+var timer : float = 0
+onready var animation = $Sprite
+
+var react_time = 400
+var next_direction = 0
+var direction = 0
+var next_dir_time = 0
+var next_jump_time = -1
+var eye_reach = 10
+var vision = 1
+'''function for the game'''
+func _ready():
+	set_physics_process(true)
+	set_process(true)
+	
+
+func set_dir(target_dir):
+	if next_direction != target_dir:
+		next_direction = target_dir
+		next_dir_time = OS.get_ticks_msec() + react_time
+
+func _physics_process(delta):
+
+
+
+
+
+
+		
+		
+	motion.y += 50 
+	
+	
+	
+	
+	var move = false 
+	var friction = false
+	
+	
+	
+#
+	
+	if Player.position.x < position.x + 1600: 
+		set_dir(-1)
+		$Sprite.flip_h = true
+		$Sprite.play("Run")
+	elif Player.position.x > position.x - 1600:
+		set_dir(1)
+		$Sprite.flip_h = false
+		$Sprite.play("Run")
+	
+	
+	
+	else:
+		set_dir(0)
+		$Sprite.play("Idle")
+		friction = true
+		motion.x = 0
+	
+	if OS.get_ticks_msec() > next_dir_time:
+		direction = next_direction
+	if OS.get_ticks_msec() > next_jump_time and next_jump_time != -1 and is_on_floor():
+#		direction = next_direction
+		if Player.position.y < position.y - 64:
+			motion.y = -1000
+		next_jump_time = -1
+		
+	motion.x = direction * 500
+		
+	
+	if Player.position.y < position.y - 64 and next_jump_time == -1:
+			next_jump_time = OS.get_ticks_msec() + react_time
+			
+	
+	if is_on_floor() and motion.y > 0:
+		motion.y = 0
+	
+	if $RayCast2D.is_colliding() and $RayCast2D2.is_colliding() and $RayCast2D3.is_colliding():
+			
+			Player.TakeDamage(1)
+		
+	
+	
+		
+		
+		
+	motion = move_and_slide(motion, UP)
+
+	
+#	motion = move_and_slide(motion, UP)
+
+#	motion = move_and_slide(motion, UP)
+		
+
+#
+
+		
